@@ -44,6 +44,10 @@ int main(int argc, char *argv[]) {
     int stablePasses, leftHashCodeFound, rightHashCodeFound, topHashCodeFound, bottomHashCodeFound, i = 0, j = 0;
     struct HashTableEntry *leftHashTableEntry, *rightHashTableEntry, *topHashTableEntry, *bottomHashTableEntry;
  
+    printf("Sandpiles Implemented /w Hash Table 0.1 (C)Copyright 2018 Manny Peterson <me@mannypeterson.com>\n");
+    printf("Phase [1/4]: Allocating memory for data structures...");
+    fflush(stdout);
+ 
     hashTable = (struct HashTableEntry *) malloc(HASH_TABLE_SIZE * sizeof(struct HashTableEntry));
     memset(hashTable, 0, HASH_TABLE_SIZE * sizeof(struct HashTableEntry));
     leftHashTableEntry = (struct HashTableEntry *) malloc(sizeof(struct HashTableEntry));
@@ -53,13 +57,22 @@ int main(int argc, char *argv[]) {
     topHashTableEntry = (struct HashTableEntry *) malloc(sizeof(struct HashTableEntry));
     memset(topHashTableEntry, 0, sizeof(struct HashTableEntry));
     bottomHashTableEntry = (struct HashTableEntry *) malloc(sizeof(struct HashTableEntry));
-    memset(bottomHashTableEntry, 0, sizeof(struct HashTableEntry));
+    memset(bottomHashTableEntry, 0, sizeof(struct HashTableEntry));   
+    matrix = (int **) malloc(START_Y * 2 * sizeof(int *));
+    for(i = 0; i < START_Y * 2; i++) {
+        matrix[i] = (int *) malloc(START_X * 2 * sizeof(int));
+        memset(matrix[i], 0, START_X * 2 * sizeof(int));
+    }
+
+    printf("done!\nPhase [2/4]: Building sandpile in hash table...");
+    fflush(stdout);
 
     (hashTable + highWaterMark)->x = START_X;
     (hashTable + highWaterMark)->y = START_Y;
     (hashTable + highWaterMark)->value = START_VALUE;
     (hashTable + highWaterMark)->hashCode = HASH_CODE((hashTable + highWaterMark)->x, (hashTable + highWaterMark)->y);
     highWaterMark++;
+    i = 0;
     
     while (1) {
         if((hashTable + i)->value > 3) {
@@ -143,15 +156,15 @@ int main(int argc, char *argv[]) {
         }
     }
     
-    matrix = (int **) malloc(START_Y * 2 * sizeof(int *));
-    for(i = 0; i < START_Y * 2; i++) {
-        matrix[i] = (int *) malloc(START_X * 2 * sizeof(int));
-        memset(matrix[i], 0, START_X * 2 * sizeof(int));
-    }
+    printf("done!\nPhase [3/4]: Translating hash table to matrix...");
+    fflush(stdout);
     
     for(i = 0; i < highWaterMark; i++) {
         matrix[(hashTable + i)->y][(hashTable + i)->x] = (hashTable + i)->value;
     }
+    
+    printf("done!\nPhase [4/4]: Writing PNG image file...");
+    fflush(stdout);
     
     return(0);    
 }
