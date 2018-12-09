@@ -21,13 +21,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "bmp.h"
 #define TRUE 1
 #define FALSE 0
 #define HASH_CODE(x, y) (10000 * x) + y
-#define HASH_TABLE_SIZE 10000
+#define HASH_TABLE_SIZE 100000
 #define START_X 500
 #define START_Y 500
-#define START_VALUE 10000
+#define START_VALUE 100000
 
 struct HashTableEntry {
     int hashCode;
@@ -164,6 +165,39 @@ int main(int argc, char *argv[]) {
     }
     
     printf("done!\nPhase [4/4]: Writing PNG image file...");
+    fflush(stdout);
+    
+    
+    int height = START_Y * 2;
+    int width = START_X * 2;
+    unsigned char image[height][width][bytesPerPixel];
+    char* imageFileName = "bitmapImage.bmp";
+
+    for(i=0; i<height; i++){
+        for(j=0; j<width; j++){
+            if(matrix[i][j] == 0) {
+                image[i][j][2] = 0;
+                image[i][j][1] = 0;
+                image[i][j][0] = 255;
+            } else if(matrix[i][j] == 1) {
+                image[i][j][2] = 255;
+                image[i][j][1] = 0;
+                image[i][j][0] = 255;
+            } else if(matrix[i][j] == 2) {
+                image[i][j][2] = 255;
+                image[i][j][1] = 0;
+                image[i][j][0] = 0;
+            } else if(matrix[i][j] == 3) {
+                image[i][j][2] = 0;
+                image[i][j][1] = 255;
+                image[i][j][0] = 0;
+            }
+        }
+    }
+
+    generateBitmapImage((unsigned char *)image, height, width, imageFileName);
+    
+    printf("done!\n");
     fflush(stdout);
     
     return(0);    
