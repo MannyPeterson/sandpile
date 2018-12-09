@@ -25,6 +25,9 @@
 #define FALSE 0
 #define HASH_CODE(x, y) (10000 * x) + y
 #define HASH_TABLE_SIZE 10000
+#define START_X 500
+#define START_Y 500
+#define START_VALUE 10000
 
 struct HashTableEntry {
     int hashCode;
@@ -34,6 +37,7 @@ struct HashTableEntry {
 };
 
 struct HashTableEntry *hashTable;
+int **matrix;
 int highWaterMark = 0;
 
 int main(int argc, char *argv[]) {
@@ -51,9 +55,9 @@ int main(int argc, char *argv[]) {
     bottomHashTableEntry = (struct HashTableEntry *) malloc(sizeof(struct HashTableEntry));
     memset(bottomHashTableEntry, 0, sizeof(struct HashTableEntry));
 
-    (hashTable + highWaterMark)->x = 500;
-    (hashTable + highWaterMark)->y = 500;
-    (hashTable + highWaterMark)->value = 10000;
+    (hashTable + highWaterMark)->x = START_X;
+    (hashTable + highWaterMark)->y = START_Y;
+    (hashTable + highWaterMark)->value = START_VALUE;
     (hashTable + highWaterMark)->hashCode = HASH_CODE((hashTable + highWaterMark)->x, (hashTable + highWaterMark)->y);
     highWaterMark++;
     
@@ -134,10 +138,19 @@ int main(int argc, char *argv[]) {
             i = 0;
             stablePasses++;
             if(stablePasses > 1) {
-                printf("%5d STABLE PASSES!\n", stablePasses);
                 break;
             }
         }
+    }
+    
+    matrix = (int **) malloc(START_Y * 2 * sizeof(int *));
+    for(i = 0; i < START_Y * 2; i++) {
+        matrix[i] = (int *) malloc(START_X * 2 * sizeof(int));
+        memset(matrix[i], 0, START_X * 2 * sizeof(int));
+    }
+    
+    for(i = 0; i < highWaterMark; i++) {
+        matrix[(hashTable + i)->y][(hashTable + i)->x] = (hashTable + i)->value;
     }
     
     return(0);    
