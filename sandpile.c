@@ -37,7 +37,7 @@ struct HashTableEntry *hashTable;
 int highWaterMark = 0;
 
 int main(int argc, char *argv[]) {
-    int isNotStable, leftHashCodeFound, rightHashCodeFound, topHashCodeFound, bottomHashCodeFound, i = 0, j = 0;
+    int stablePasses, leftHashCodeFound, rightHashCodeFound, topHashCodeFound, bottomHashCodeFound, i = 0, j = 0;
     struct HashTableEntry *leftHashTableEntry, *rightHashTableEntry, *topHashTableEntry, *bottomHashTableEntry;
  
     hashTable = (struct HashTableEntry *) malloc(HASH_TABLE_SIZE * sizeof(struct HashTableEntry));
@@ -57,9 +57,9 @@ int main(int argc, char *argv[]) {
     (hashTable + highWaterMark)->hashCode = HASH_CODE((hashTable + highWaterMark)->x, (hashTable + highWaterMark)->y);
     highWaterMark++;
     
-    do {
+    while (1) {
         if((hashTable + i)->value > 3) {
-            printf("%5d NOT STABLE!\n", i);
+            stablePasses = 0;
             (hashTable + i)->value -= 4;
             
             leftHashTableEntry->x = (hashTable + i)->x - 1;
@@ -128,8 +128,17 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        i = (i + 1) % highWaterMark;
-    } while(1);
+        i++;
+
+        if(i == highWaterMark) {
+            i = 0;
+            stablePasses++;
+            if(stablePasses > 1) {
+                printf("%5d STABLE PASSES!\n", stablePasses);
+                break;
+            }
+        }
+    }
     
     return(0);    
 }
