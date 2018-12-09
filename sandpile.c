@@ -24,11 +24,11 @@
 #include "bmp.h"
 #define TRUE 1
 #define FALSE 0
-#define HASH_CODE(x, y) (10000 * x) + y
+#define HASH_CODE(x, y) (51307 * x) + y
 #define HASH_TABLE_SIZE 100000
-#define START_X 500
-#define START_Y 500
-#define START_VALUE 100000
+#define START_X 250
+#define START_Y 250
+#define START_VALUE 50000
 
 struct HashTableEntry {
     int hashCode;
@@ -44,6 +44,8 @@ int highWaterMark = 0;
 int main(int argc, char *argv[]) {
     int stablePasses, leftHashCodeFound, rightHashCodeFound, topHashCodeFound, bottomHashCodeFound, i = 0, j = 0;
     struct HashTableEntry *leftHashTableEntry, *rightHashTableEntry, *topHashTableEntry, *bottomHashTableEntry;
+    
+    unsigned char image[START_Y * 2][START_X * 2][bytesPerPixel];
  
     printf("Sandpiles Implemented /w Hash Table 0.1 (C)Copyright 2018 Manny Peterson <me@mannypeterson.com>\n");
     printf("Phase [1/4]: Allocating memory for data structures...");
@@ -167,14 +169,8 @@ int main(int argc, char *argv[]) {
     printf("done!\nPhase [4/4]: Writing PNG image file...");
     fflush(stdout);
     
-    
-    int height = START_Y * 2;
-    int width = START_X * 2;
-    unsigned char image[height][width][bytesPerPixel];
-    char* imageFileName = "bitmapImage.bmp";
-
-    for(i=0; i<height; i++){
-        for(j=0; j<width; j++){
+    for(i=0; i<START_Y * 2; i++){
+        for(j=0; j<START_X * 2; j++){
             if(matrix[i][j] == 0) {
                 image[i][j][2] = 0;
                 image[i][j][1] = 0;
@@ -195,7 +191,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    generateBitmapImage((unsigned char *)image, height, width, imageFileName);
+    generateBitmapImage((unsigned char *)image, START_Y * 2, START_X * 2, "sandpile.bmp");
     
     printf("done!\n");
     fflush(stdout);
